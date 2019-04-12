@@ -83,7 +83,7 @@ currentflux = 0
 currentcharge = 0
 
 for i in numberofcsvs:
-    data = np.genfromtxt(i, skip_header=3, skip_footer=0, names=['Time', 'Voltage', 'Current'], delimiter=",")
+    data = np.genfromtxt(i, skip_header=3, skip_footer=0, names=['Time', 'Voltage', 'CurrentA', 'CurrentB'], delimiter=",")
     maindata.append(data)
 
 wb = openpyxl.Workbook()
@@ -94,7 +94,7 @@ for j in range(0,len(maindata[0]['Voltage'])):
                meanI = 0
                meanT = 0
                for l in range(0,len(maindata)):
-                   meanI = meanI + maindata[l]['Current'][j]
+                   meanI = meanI + (maindata[l]['CurrentA'][j]+maindata[l]['CurrentB'][j])/2
                    meanV = meanV + maindata[l]['Voltage'][j]
                    meanT = meanT + maindata[l]['Time'][j]
                meanV = meanV/len(maindata)

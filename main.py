@@ -89,23 +89,34 @@ for i in numberofcsvs:
 wb = openpyxl.Workbook()
 sheet = wb.active
 
+threshold = 1000
+
 for j in range(0,len(maindata[0]['Voltage'])):
                meanV = 0
                meanI = 0
                meanT = 0
+               Vtotal = 0
+               Itotal = 0
+               Ttotal = 0
                for l in range(0,len(maindata)):
-                   meanI = meanI + (maindata[l]['CurrentA'][j]+maindata[l]['CurrentB'][j])/2
-                   meanV = meanV + maindata[l]['Voltage'][j]
-                   meanT = meanT + maindata[l]['Time'][j]
-               meanV = meanV/len(maindata)
-               meanI = meanI/len(maindata)
-               meanT = meanT/len(maindata)
+                   if (np.abs(maindata[l]['CurrentA'][j]) < threshold):
+                       meanI = meanI + (maindata[l]['CurrentA'][j]+maindata[l]['CurrentB'][j])/2
+                       Itotal = Itotal + 1
+                   if (np.abs(maindata[l]['Voltage'][j]) < threshold):
+                       meanV = meanV + maindata[l]['Voltage'][j]
+                       Vtotal = Vtotal + 1
+                   if (np.abs(maindata[l]['Time'][j]) < threshold):
+                       meanT = meanT + maindata[l]['Time'][j]
+                       Ttotal = Ttotal + 1
+               meanV = meanV/Vtotal
+               meanI = meanI/Itotal
+               meanT = meanT/Ttotal
                voltages.append(meanV)
                currents.append(meanI)
                times.append(meanT)
 
-               resistances.append(meanV/meanI)
-               conductances.append(meanI/meanV)
+               #resistances.append(meanV/meanI)
+               #conductances.append(meanI/meanV)
 
                c1 = sheet.cell(row = j+1, column = 1)
                c1.value = meanT

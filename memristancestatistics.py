@@ -83,5 +83,27 @@ currentflux = 0
 currentcharge = 0
 
 for i in numberofcsvs:
-    data = np.genfromtxt(i, skip_header=3, skip_footer=0, names=['Time', 'Voltage', 'CurrentA', 'CurrentB'], delimiter=",")
+    data = np.genfromtxt(i, skip_header=0, skip_footer=0, names=['frequency', 'fwdarea', 'bwdarea', 'fwdaread', 'bwdaread'], delimiter=",")
+
+    plt.figure(figsize=(8,8))
+    plt.subplot(221)
+    plt.semilogx(data['frequency'], data['fwdaread'], c='k')
+    plt.semilogx(data['frequency'], data['fwdarea'], c='b')
+    title = str('Forward loop area x f')
+    plt.title(title)
+    plt.ylabel('Forward loop area [W]')
+    plt.xlabel('Frequency [Hz]')
+    plt.tight_layout()
+
+    plt.subplot(222)
+    plt.semilogx(data['frequency'], data['bwdaread'], c='k')
+    plt.semilogx(data['frequency'], data['bwdarea'], c='b')
+    title = str('Backward loop area x f')
+    plt.title(title)
+    plt.ylabel('Backward loop area [W]')
+    plt.xlabel('Frequency [Hz]')
+    plt.tight_layout()
+                    
+    plt.savefig('Final.png')
+    plt.close()
     
